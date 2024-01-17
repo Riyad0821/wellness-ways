@@ -13,15 +13,22 @@ export const SignupScreen: FC<SignupScreenProps> = observer(function SignupScree
   const passwordInput = useRef<TextInput>(null)
   const emailInput = useRef<TextInput>(null)
   const passwordConfirmInput = useRef<TextInput>(null)
-  const [username, setUsername] = useState("")
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
   const {
-    signupStore: {  setAuthEmail, setAuthToken, validationError },
+    signupStore: {
+      username,
+      email,
+      password,
+      confirmPassword,
+      setUsername,
+      setEmail,
+      setPassword,
+      setConfirmPassword,
+      setAuthToken,
+      validationError,
+    },
   } = useStores()
 
   useEffect(() => {
@@ -33,11 +40,11 @@ export const SignupScreen: FC<SignupScreenProps> = observer(function SignupScree
     // Return a "cleanup" function that React will run when the component unmounts
     return () => {
       setPassword("")
-      setAuthEmail("")
+      setEmail("")
     }
   }, [])
 
-  const error = isSubmitted ? validationError : ""
+  const error: any = isSubmitted ? validationError : ""
 
   function signup() {
     setIsSubmitted(true)
@@ -49,7 +56,7 @@ export const SignupScreen: FC<SignupScreenProps> = observer(function SignupScree
     // If successful, reset the fields and set the token.
     setIsSubmitted(false)
     setPassword("")
-    setAuthEmail("")
+    setEmail("")
 
     // We'll mock this with a fake token.
     setAuthToken()
@@ -95,8 +102,8 @@ export const SignupScreen: FC<SignupScreenProps> = observer(function SignupScree
         // keyboardType="email-address"
         labelTx="signupScreen.usernameFieldLabel"
         placeholderTx="loginScreen.emailFieldPlaceholder"
-        helper={error}
-        status={error ? "error" : undefined}
+        helper={error?.username}
+        status={error.username ? "error" : undefined}
         onSubmitEditing={() => emailInput.current?.focus()}
       />
       <TextField
@@ -110,8 +117,8 @@ export const SignupScreen: FC<SignupScreenProps> = observer(function SignupScree
         keyboardType="email-address"
         labelTx="loginScreen.emailFieldLabel"
         placeholderTx="loginScreen.emailFieldPlaceholder"
-        helper={error}
-        status={error ? "error" : undefined}
+        helper={error?.email}
+        status={error?.email ? "error" : undefined}
         onSubmitEditing={() => passwordInput.current?.focus()}
       />
 
@@ -127,6 +134,8 @@ export const SignupScreen: FC<SignupScreenProps> = observer(function SignupScree
         labelTx="signupScreen.passwordFieldLabel"
         placeholderTx="signupScreen.passwordFieldPlaceholder"
         onSubmitEditing={() => passwordConfirmInput.current?.focus()}
+        helper={error?.password}
+        status={error?.password ? "error" : undefined}
         RightAccessory={PasswordRightAccessory}
       />
 
@@ -141,6 +150,8 @@ export const SignupScreen: FC<SignupScreenProps> = observer(function SignupScree
         secureTextEntry={isAuthPasswordHidden}
         labelTx="signupScreen.confirmPasswordFieldLabel"
         placeholderTx="signupScreen.confirmPasswordFieldPlaceholder"
+        helper={error?.confirmPassword}
+        status={error?.confirmPassword ? "error" : undefined}
         onSubmitEditing={signup}
         // RightAccessory={PasswordRightAccessory}
       />
